@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+
+{% block body %}
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<div 
+    id="g_id_onload"
+    data-client_id="{{google_client_id}}"
+    data-callback="handleCredentialResponse">
+</div>
+
+<div class="g_id_signin"
+    data-type="standard"
+    data-shape="rectangular"
+    data-theme="outline"
+    data-text="signin_with"
+    data-size="large"
+></div>
+
+<script>
+    function handleCredentialResponse(response) {
+        // The ID token you need to pass to your backend for verification
+        const idToken = response.credential;
+
+        const url = '{{verify_url}}';
+        const data = {'id_token': idToken};
+
+        fetch(url, {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json', // You can set the content type based on your needs
+            },
+            body: JSON.stringify(data) // Convert the data object to a JSON string
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json(); // Parse the JSON from the response
+        })
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    
+      // Here you can send the ID token to your backend for further processing
+      // console.log('ID Token:', idToken);
+  
+      // Decode the token to extract user information (optional)
+      // const payload = JSON.parse(atob(idToken.split('.')[1]));
+      // console.log('User Info:', payload);
+    }
+  </script>
+
+{% endblock body %}

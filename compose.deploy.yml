@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    restart: always
+    volumes:
+      - ./app:/app
+      - static-data:/vol/web
+    env_file:
+      - .env
+    environment:
+      # DATABASE_URL=postgresql://user:password@db:5432/db_name
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - 8000:8000
+    volumes:
+      - static-data:/vol/static
+
+volumes:
+  db-data:
+  static-data:

@@ -2,7 +2,7 @@
 A django boilerplate ready to deploy. Inspired by @marclou idea to ship fast.
 
 ## Features:
-  - [ ] Tailwind
+  - [x] Tailwind
   - [ ] Authentication with Google (API available)
   - [ ] Background worker
   - [ ] Image compression
@@ -11,4 +11,4 @@ A django boilerplate ready to deploy. Inspired by @marclou idea to ship fast.
   - [ ] Feedback (API available)
   - [ ] Blog
   - [ ] Lots of SEO configured
-  - [ ] Docker configured to deploy in one click
+  - [x] Docker configured to deploy in one click
