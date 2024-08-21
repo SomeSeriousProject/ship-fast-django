@@ -1,16 +1,21 @@
 CURRENT_FOLDER := $(notdir $(CURDIR))
 
-PROJ_NAME_DEV := $(CURRENT_FOLDER)"_dev"
 PROJ_NAME_DEPLOY := $(CURRENT_FOLDER)"_deploy"
 
 COMPOSE_FILE_DEV := "docker/compose.yml"
 COMPOSE_FILE_DEPLOY := "docker/compose.deploy.yml"
 
 test:
-	docker compose -p $(PROJ_NAME_DEV) run --rm app python manage.py test
+	docker compose -f $(COMPOSE_FILE_DEV) run --rm app python manage.py test
 
 makemigrations:
-	docker compose -p $(PROJ_NAME_DEV) run --rm app python manage.py makemigrations
+	docker compose -f $(COMPOSE_FILE_DEV) run --rm app python manage.py makemigrations
+
+down:
+	docker compose -f $(COMPOSE_FILE_DEV) down
+
+up-rebuild:
+	docker compose -f $(COMPOSE_FILE_DEV) up --build
 
 init:
 	cd tailwind && npm install
@@ -21,7 +26,7 @@ start:
 start_parallel: start_tailwind start_django
 
 start_django:
-	docker compose -p $(PROJ_NAME_DEV) -f $(COMPOSE_FILE_DEV) up
+	docker compose -f $(COMPOSE_FILE_DEV) -f $(COMPOSE_FILE_DEV) up
 
 start_tailwind:
 	cd tailwind && npm start
