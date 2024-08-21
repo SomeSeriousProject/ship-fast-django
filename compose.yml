@@ -14,8 +14,26 @@ services:
       - .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379/1
     depends_on:
       - db
+      - redis
+
+  celery:
+    build: .
+    volumes:
+      - ./app:/app
+      - dev-static-data:/vol/web
+    command: celery -A config worker -l INFO
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379/1
+    depends_on:
+      - db
+      - redis
+      - app
 
   db:
     image: postgres:13-alpine
@@ -25,6 +43,9 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  redis:
+    image: redis:7-alpine
 
 volumes:
   dev-db-data:

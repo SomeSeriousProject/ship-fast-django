@@ -10,9 +10,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", 0))
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "your_domain_here"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,7 +23,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "core",
-    "account",
 ]
 
 MIDDLEWARE = [
@@ -112,9 +110,9 @@ STATIC_ROOT = "/vol/web/static"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
-# Required for google sign in to work properly
-SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
-SECURE_CROSS_ORIGIN_OPENER_POLICY = "strict-origin-when-cross-origin"
+# Celery configuration
+CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_TASK_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_RESULT_SERIALIZER = "json"
