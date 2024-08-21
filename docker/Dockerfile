@@ -9,7 +9,7 @@ RUN python -m venv /py && \
     build-base postgresql-dev musl-dev zlib zlib-dev linux-headers
 
 COPY ./requirements.txt /tmp/requirements.txt
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./docker/entrypoint.sh /entrypoint.sh
 COPY ./app /app
 WORKDIR /app
 EXPOSE 8000
@@ -27,8 +27,8 @@ RUN /py/bin/pip install -r /tmp/requirements.txt && \
     chmod -R 755 /vol && \
     chmod -R +x /entrypoint.sh
 
-ENV PATH="/entrypoint.sh:/py/bin:$PATH"
+ENV PATH="/py/bin:$PATH"
 
 USER django-user
 
-CMD ["entrypoint.sh"]
+CMD ["/entrypoint.sh"]
