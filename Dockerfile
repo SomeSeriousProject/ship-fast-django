@@ -9,7 +9,7 @@ RUN python -m venv /py && \
     build-base postgresql-dev musl-dev zlib zlib-dev linux-headers
 
 COPY ./requirements.txt /tmp/requirements.txt
-COPY ./scripts /scripts
+COPY ./entrypoint.sh /entrypoint.sh
 COPY ./app /app
 WORKDIR /app
 EXPOSE 8000
@@ -25,9 +25,9 @@ RUN /py/bin/pip install -r /tmp/requirements.txt && \
     mkdir -p /vol/web/static && \
     chown -R django-user:django-user /vol && \
     chmod -R 755 /vol && \
-    chmod -R +x /scripts
+    chmod -R +x /entrypoint.sh
 
-ENV PATH="/scripts:/py/bin:$PATH"
+ENV PATH="/entrypoint.sh:/py/bin:$PATH"
 
 USER django-user
 
