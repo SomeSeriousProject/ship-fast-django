@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "tailwindcss --postcss -i ./input.css -o ../app/core/static/output.css --watch"
+    "start": "tailwindcss --postcss -i ./input.css -o ./src/core/static/output.css --watch"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

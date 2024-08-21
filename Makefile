@@ -1,41 +1,42 @@
 CURRENT_FOLDER := $(notdir $(CURDIR))
-
 PROJ_NAME_DEPLOY := $(CURRENT_FOLDER)"_deploy"
 
-COMPOSE_FILE_DEV := "docker/compose.yml"
-COMPOSE_FILE_DEPLOY := "docker/compose.deploy.yml"
-
+# Core commands for dev
 test:
-	docker compose -f $(COMPOSE_FILE_DEV) run --rm app python manage.py test
+	docker compose run --rm app python manage.py test
 
 makemigrations:
-	docker compose -f $(COMPOSE_FILE_DEV) run --rm app python manage.py makemigrations
+	docker compose run --rm app python manage.py makemigrations
 
-down:
-	docker compose -f $(COMPOSE_FILE_DEV) down
+up:
+	docker compose up
 
 up-rebuild:
-	docker compose -f $(COMPOSE_FILE_DEV) up --build
+	docker compose up --build
 
-init:
-	cd tailwind && npm install
+down:
+	docker compose down
 
-start:
+createsuperuser:
+	docker compose run --rm app python manage.py createsuperuser
+
+# Start dev environment
+dev:
 	make start_parallel -j2
 
-start_parallel: start_tailwind start_django
-
-start_django:
-	docker compose -f $(COMPOSE_FILE_DEV) -f $(COMPOSE_FILE_DEV) up
+start_parallel: start_tailwind up
 
 start_tailwind:
-	cd tailwind && npm start
+	npm start
 
 
 # Deploy commands
 deploy:
 	git pull && \
-	docker compose -p $(PROJ_NAME_DEPLOY) -f $(COMPOSE_FILE_DEPLOY) up -d --build
+	docker compose -p $(PROJ_NAME_DEPLOY) up -d --build
 
 deploy-down:
-	docker compose -p $(PROJ_NAME_DEPLOY) -f $(COMPOSE_FILE_DEPLOY) down
+	docker compose -p $(PROJ_NAME_DEPLOY) down
+
+deploy-createsuperuser:
+	docker compose -p $(PROJ_NAME_DEPLOY) run --rm app python manage.py createsuperuser

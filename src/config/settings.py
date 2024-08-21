@@ -60,6 +60,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+print(f"DATABASE_URL: {os.environ["DATABASE_URL"]}")
+
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ["DATABASE_URL"],

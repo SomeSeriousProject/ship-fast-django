@@ -10,7 +10,7 @@ RUN python -m venv /py && \
 
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./docker/entrypoint.sh /entrypoint.sh
-COPY ./app /app
+COPY ./src /app
 WORKDIR /app
 EXPOSE 8000
 
